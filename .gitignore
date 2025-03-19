@@ -1,0 +1,12 @@
+*.env
+venv
+__pycache__
+*.pdf
+*.txt
+.DS_Store
+out/*
+rough_work/*
+*.aux
+*.log
+*.out
+

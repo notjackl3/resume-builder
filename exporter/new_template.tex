@@ -1,0 +1,73 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\Huge \scshape {{ name }} } \\ \vspace{1pt}
+    \small {{ phone }} $|$ \href{mailto:{{ email }}}{\underline{{ email }}} $|$ 
+    \href{https://linkedin.com/in/{{ linkedin }}}{\underline{LinkedIn}} $|$
+    \href{https://github.com/{{ github }}}{\underline{GitHub}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+\resumeSubHeadingListStart
+{% for edu in education %}
+    \resumeSubheading
+      { {{ edu.school }} }{ {{ edu.city }}, {{ edu.country }} }
+      { {{ edu.degree }} }{}
+{% endfor %}
+\resumeSubHeadingListEnd
+
+%-----------WORK EXPERIENCE-----------
+\section{Work Experience}
+\resumeSubHeadingListStart
+{% for job in work_experience %}
+    \resumeSubheading
+      { {{ job.title }} }{ {{ job.date }} }
+      { {{ job.company }} }{ {{ job.city }}, {{ job.country }} }
+      \resumeItemListStart
+      {% for task in job.tasks %}
+        \resumeItem{ {{ task }} }
+      {% endfor %}
+      \resumeItemListEnd
+{% endfor %}
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+\resumeSubHeadingListStart
+{% for project in projects %}
+    \resumeProjectHeading
+      {\textbf{ {{ project.name }} } $|$ \emph{ {{ project.technologies }} }}{ {{ project.date }} }
+      \resumeItemListStart
+      {% for detail in project.details %}
+        \resumeItem{ {{ detail }} }
+      {% endfor %}
+      \resumeItemListEnd
+{% endfor %}
+\resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+    \small{
+    \item \textbf{Languages}: {{ skills.languages }}
+    \item \textbf{Frameworks}: {{ skills.frameworks }}
+    \item \textbf{Developer Tools}: {{ skills.tools }}
+    \item \textbf{Libraries}: {{ skills.libraries }}
+    }
+\end{itemize}
+
+\end{document}

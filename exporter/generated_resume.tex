@@ -1,0 +1,239 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+% \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+%   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
+%   \href{http://sourabhbajaj.com/}{http://www.sourabhbajaj.com} & Mobile : +1-123-456-7890 \\
+% \end{tabular*}
+
+\begin{center}
+    \textbf{\Huge \scshape Huu An Duc (Jack) Le \\ \vspace{1pt}}
+    \small +1 416-617-3686 $|$ \href{mailto:x@x.com}{\underline{huuanducle\@gmail.com}} $|$
+    \href{https://linkedin.com/in/...}{\underline{www.linkedin.com/in/huu-an-duc-le}} $|$
+    \href{https://github.com/...}{\underline{...}}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {University of Toronto}{}
+    {Majoring in Computer Science and Applied Mathematics - GPA: 3.86}{Canada}
+    \resumeSubheading
+    {British International School, Ho Chi Minh city}{}
+    {International Baccalaureate Diploma - GPA: 3.85}{Vietnam}
+    
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+
+\section{Work Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Tutoring and Mentorship}{September, 2022 - Present}
+      {University of Toronto \& British International School, Canada}{}
+      \resumeItemListStart
+        \resumeItem{Collaborated with colleagues to facilitate weekly tutoring sessions for first-year University of Toronto students in Mathematics and Computer Science.}
+        \resumeItem{Created tailored study materials and presentations, integrating self-produced videos to simplify complex computer science fundamentals and actively engage learners.}
+        \resumeItem{- Spearheaded a team of more than 30 secondary students, driving an average 20\% enhancement in academic performance.}
+        
+      \resumeItemListEnd
+    \resumeSubheading
+      {Productivity Application for British International School Students}{January, 2021 - Present}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Collaborated with the Computer Science department at BIS to develop and refine an innovative app named "The Planner" for students.}
+        \resumeItem{Collaborated with the researcher group, Computer Science department heads, and Wellbeing faculty to lead the development of a user-friendly platform, ensuring reliability for students and parents.}
+        \resumeItem{Achieved over 300 total downloads across primary and secondary campuses.}
+        
+      \resumeItemListEnd
+    \resumeSubheading
+      {Design Technology Ambassador}{May, 2020 - July, 2024}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Coordinated inclusive departmental welcome events, showcasing Design Technology to parents and students through interactive 3D software demonstrations.}
+        \resumeItem{Hands-on die-casting and aluminum crafting activities.}
+        
+      \resumeItemListEnd
+    \resumeSubheading
+      {Content Creation \& Video Editing}{November, 2022 - May, 2024}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Managed a YouTube channel with 14,000 members, 2.5 million viewers, with 4 years of video editing experience.}
+        \resumeItem{Freelance work on 12 projects for 5 international clients.}
+        
+      \resumeItemListEnd
+    
+% -----------Multiple Positions Heading-----------
+   % \resumeSubSubheading
+   %  {Software Engineer I}{Oct 2014 - Sep 2016}
+   %  \resumeItemListStart
+   %     \resumeItem{Apache Beam}
+   %       {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+   %  \resumeItemListEnd
+   % \resumeSubHeadingListEnd
+%-------------------------------------------
+  \resumeSubHeadingListEnd
+
+
+
+%-----------VOLUNTEER-----------
+
+\section{Volunteer Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {President, Design Now Club}{September, 2023 - May, 2024}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Provided guidance to students on utilizing CAD software for 3D printing and coordinated interactive woodworking projects.}
+        
+      \resumeItemListEnd
+    \resumeSubheading
+      {British International School Prefect Team}{December, 2022 - May, 2024}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Led school orientation events for new parents and students, fostering an inclusive and welcoming environment.}
+        \resumeItem{Led and delivered the "Introduction to Computer Science" workshop, where Computer Science fundamentals were presented to parents through live demonstrations of Micro:bit robotics and block-based programming.}
+        
+      \resumeItemListEnd
+    \resumeSubheading
+      {Vice-president, Create and Care Club}{September, 2022 - January, 2024}
+      {Vietnam}{}
+      \resumeItemListStart
+        \resumeItem{Led a team in instructing local students on creating handmade products, such as clay models and accessories.}
+        \resumeItem{Coordinated sales efforts at seasonal events, generating revenue.}
+        
+      \resumeItemListEnd
+    
+  \resumeSubHeadingListEnd
+
+
+
+%-----------PROJECTS-----------
+
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Proficient: }Python, C\#, HTML, CSS, Javascript, SQL \\
+     \textbf{Intermediate: }Java, C++, Perl \\
+     \textbf{Technologies: }Adobe Premiere Pro, Adobe Photoshop, Microsoft Office \\
+     \textbf{Soft skills: }Creativity, Customer obsession, Self-management, Quick learning, Effective communication, Adaptability, Problem-solving, Curious, Visionary, Personal growth, Agile, Collaborative, Inclusive, Big thinker, Innovative \\
+    }}
+ \end{itemize}
+
+
+%-------------------------------------------
+\end{document}
