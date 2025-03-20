@@ -27,7 +27,7 @@ JOB_PROMPT = ("You will act as a helpful hiring manager. You will be given a job
               "certification, tools, and even the words that are repeated the most. If the word contains"
               "the character ', remember to add an escape character before it, to prevent errors."
               "The output must be a python dictionary containing lists of these SINGLE keywords, {aspect: [<str>]}. "
-              "The aspects are responsibilities, soft-skills, hard-skills, preferred-experiences, technology, "
+              "The aspects are responsibilities, soft-skills, hard-skills, preferred-experiences, technologies, "
               "action-verbs, coding-languages"
               "These aspects are the dictionary keys, with list of SINGLE keywords as the values."
               "Keywords should be a single word or phrase, they cannot be sentences, try to include as many keywords "

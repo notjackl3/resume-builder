@@ -34,14 +34,14 @@ class UserDatabaseManager:
                     if new:
                         cur.execute("DROP TABLE IF EXISTS profile")
 
-                        create_table = """CREATE TABLE IF NOT EXISTS profile (
-                        id SERIAL PRIMARY KEY,
-                        name VARCHAR(100),
-                        email VARCHAR(100),
-                        phone VARCHAR(100),
-                        linkedin VARCHAR(100),
-                        github VARCHAR(100))"""
-                        cur.execute(create_table)
+                    create_table = """CREATE TABLE IF NOT EXISTS profile (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(100),
+                    email VARCHAR(100),
+                    phone VARCHAR(100),
+                    linkedin VARCHAR(100),
+                    github VARCHAR(100))"""
+                    cur.execute(create_table)
 
                     insert_command = ("INSERT INTO profile (name, email, phone, linkedin, github) "
                                       "VALUES (%s, %s, %s, %s, %s)")
@@ -161,7 +161,7 @@ class UserDatabaseManager:
             print(error)
 
     def add_experience(self, user_id, name, experience_type, what="NULL", where="NULL", how="NULL",
-                            start_date="NULL", end_date="NULL", result="NULL"):
+                       start_date="NULL", end_date="NULL", result="NULL"):
         try:
             with psycopg2.connect(host=self._host,
                                   dbname=self._dbname,
@@ -188,6 +188,62 @@ class UserDatabaseManager:
                                       "(name, experience_type, what, location, how, start_date, end_date, result, user_id)"
                                       "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
                     insert_item = [(name, experience_type, what, where, how, start_date, end_date, result, user_id)]
+                    for item in insert_item:
+                        cur.execute(insert_command, item)
+                    connection.commit()
+        except Exception as error:
+            print(error)
+
+    def add_job(self, user_id, title, company, description):
+        try:
+            with psycopg2.connect(host=self._host,
+                                  dbname=self._dbname,
+                                  user=self._user,
+                                  password=self._password,
+                                  port=self._port) as connection:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                    create_table = """CREATE TABLE IF NOT EXISTS jobs (
+                                        id SERIAL PRIMARY KEY,
+                                        title VARCHAR(100),
+                                        company VARCHAR(100),
+                                        description TEXT,
+                                        user_id INT,
+                                        CONSTRAINT fk_user
+                                            FOREIGN KEY(user_id)
+                                                REFERENCES profile(id) ON DELETE CASCADE)"""
+                    cur.execute(create_table)
+                    insert_command = ("INSERT INTO jobs "
+                                      "(title, company, description, user_id)"
+                                      "VALUES (%s, %s, %s, %s)")
+                    insert_item = [(title, company, description, user_id)]
+                    for item in insert_item:
+                        cur.execute(insert_command, item)
+                    connection.commit()
+        except Exception as error:
+            print(error)
+
+    def add_job_features(self, word, feature_type, job_id):
+        try:
+            with psycopg2.connect(host=self._host,
+                                  dbname=self._dbname,
+                                  user=self._user,
+                                  password=self._password,
+                                  port=self._port) as connection:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                    create_table = """CREATE TABLE IF NOT EXISTS job_features (
+                                        id SERIAL PRIMARY KEY,
+                                        word VARCHAR NOT NULL,
+                                        feature_type VARCHAR(100) CHECK (feature_type IN ('responsibility', 'soft-skill', 'hard-skill', 'preferred-experience', 
+                                        'technology', 'action-verb', 'coding-language')),
+                                        job_id INT,
+                                        CONSTRAINT fk_job
+                                            FOREIGN KEY(job_id)
+                                                REFERENCES jobs(id) ON DELETE CASCADE)"""
+                    cur.execute(create_table)
+                    insert_command = ("INSERT INTO job_features "
+                                      "(word, feature_type, job_id)"
+                                      "VALUES (%s, %s, %s)")
+                    insert_item = [(word, feature_type, job_id)]
                     for item in insert_item:
                         cur.execute(insert_command, item)
                     connection.commit()

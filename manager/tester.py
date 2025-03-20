@@ -54,30 +54,43 @@ user_database = UserDatabaseManager("localhost",
                                     "notjackl3",
                                     "itismejack",
                                     "5432")
-user_database.create_new_database(manager.resume_dict["name"],
-                                  manager.resume_dict["contact"]["email"],
-                                  manager.resume_dict["contact"]["phone"],
-                                  manager.resume_dict["contact"]["linkedin"],
-                                  manager.resume_dict["contact"]["github"],
-                                  new=False)
+
+
+def reset_database(database: UserDatabaseManager):
+    database.delete_table("experiences")
+    database.delete_table("skills")
+    database.delete_table("education")
+    database.delete_table("jobs")
+    database.delete_table("job_features")
+    database.delete_table("profile")
+    user_database.create_new_database(manager.resume_dict["name"],
+                                      manager.resume_dict["contact"]["email"],
+                                      manager.resume_dict["contact"]["phone"],
+                                      manager.resume_dict["contact"]["linkedin"],
+                                      manager.resume_dict["contact"]["github"],
+                                      new=False)
+
+
+reset_database(user_database)
+
 
 # output = user_database.get_id("Jack")
-new_edu = False
-for edu in manager.resume_dict["education"]:
-    start_date = make_date(edu["when"], "start")
-    end_date = make_date(edu["when"], "end")
+def add_education_to_database(database: UserDatabaseManager, id: int):
+    for edu in manager.resume_dict["education"]:
+        start_date = make_date(edu["when"], "start")
+        end_date = make_date(edu["when"], "end")
+        database.add_education(id,
+                               edu["school"],
+                               edu["program"],
+                               start_date,
+                               end_date,
+                               edu["city"],
+                               edu["school"],
+                               edu["gpa"],
+                               new=False)
 
-    user_database.add_education(1,
-                                edu["school"],
-                                edu["program"],
-                                start_date,
-                                end_date,
-                                edu["city"],
-                                edu["school"],
-                                edu["gpa"],
-                                new=new_edu)
 
-    new_edu = False
+add_education_to_database(user_database, 1)
 
 
 def add_skills_to_database(database: UserDatabaseManager, id: int):
@@ -91,38 +104,10 @@ def add_skills_to_database(database: UserDatabaseManager, id: int):
     database.add_skills(1, all_interests)
 
 
-user_database.delete_table("skills")
 add_skills_to_database(user_database, 1)
 
 
 def add_experiences_to_database(database: UserDatabaseManager, id: int):
-    # for work in manager.resume_dict["work-experiences"]:
-    #     start_date = make_date(work["when"], "start")
-    #     end_date = make_date(work["when"], "end")
-    #     database.add_experience(id,
-    #                             work["name"],
-    #                             work["type"],
-    #                             work["what"],
-    #                             work["where"],
-    #                             work["how"],
-    #                             start_date,
-    #                             end_date,
-    #                             work["result"],
-    #                             new=True)
-    # for volunteer in manager.resume_dict["volunteer-experiences"]:
-    #     start_date = make_date(volunteer["when"], "start")
-    #     end_date = make_date(volunteer["when"], "end")
-    #     database.add_experience(id,
-    #                             volunteer["name"],
-    #                             volunteer["type"],
-    #                             volunteer["what"],
-    #                             volunteer["where"],
-    #                             volunteer["how"],
-    #                             start_date,
-    #                             end_date,
-    #                             volunteer["result"],
-    #                             new=False)
-    database.delete_table("experiences")
     all_experiences = manager.resume_dict["volunteer-experiences"] + manager.resume_dict["work-experiences"]
     for experience in all_experiences:
         start_date = make_date(experience["when"], "start")
@@ -139,3 +124,34 @@ def add_experiences_to_database(database: UserDatabaseManager, id: int):
 
 
 add_experiences_to_database(user_database, 1)
+
+
+def add_job_to_database(database: UserDatabaseManager, id: int):
+    title = input("What is the job title? ")
+    company_name = input("What is the company name? ")
+    with open("../documents/inputs/jobs.txt") as file:
+        job_description = file.read()
+    database.add_job(id, title, company_name, job_description)
+
+
+add_job_to_database(user_database, 1)
+
+
+def add_job_features(database: UserDatabaseManager, id: int):
+    for x in manager.job_desc_dict["responsibilities"]:
+        database.add_job_features(x, "responsibility", id)
+    for x in manager.job_desc_dict["soft-skills"]:
+        database.add_job_features(x, "soft-skill", id)
+    for x in manager.job_desc_dict["hard-skills"]:
+        database.add_job_features(x, "hard-skill", id)
+    for x in manager.job_desc_dict["preferred-experiences"]:
+        database.add_job_features(x, "preferred-experience", id)
+    for x in manager.job_desc_dict["technologies"]:
+        database.add_job_features(x, "technology", id)
+    for x in manager.job_desc_dict["action-verbs"]:
+        database.add_job_features(x, "action-verb", id)
+    for x in manager.job_desc_dict["coding-languages"]:
+        database.add_job_features(x, "coding-language", id)
+
+
+add_job_features(user_database, 1)

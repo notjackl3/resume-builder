@@ -106,7 +106,7 @@ class Manager:
                                                              + self.job_desc_dict["action-verbs"]),
                               "how": self._matching(data=self.experience_data, search="how",
                                                     to_look=self.job_desc_dict["hard-skills"]
-                                                            + self.job_desc_dict["technology"]
+                                                            + self.job_desc_dict["technologies"]
                                                             + self.job_desc_dict["action-verbs"]),
                               "result": self._matching(data=self.experience_data, search="result",
                                                        to_look=self.job_desc_dict["action-verbs"]

@@ -36,8 +36,8 @@ CODING_LANGUAGES = [
     "c#"
 ]
 
-manager = Manager(resume="../documents/Resume Huu An Duc Le.pdf",
-                  job_desc="../documents/jobs.txt"
+manager = Manager(resume="../documents/inputs/Resume Huu An Duc Le.pdf",
+                  job_desc="../documents/inputs/jobs.txt"
                   )
 manager.extract_information_resume("../documents/outputs/output.txt")
 manager.extract_information_job("../documents/outputs/output-job.txt")
