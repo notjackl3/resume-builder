@@ -16,6 +16,8 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 def process_information(bot: Union[ResumeExtractor, JobDescriptionExtractor], to_file: str, input: str):
+    output_dir = "../documents/outputs"
+    os.makedirs(output_dir, exist_ok=True)
     with open(to_file, "w") as file:
         output = bot.extract(input)
         file.write(output)
@@ -130,27 +132,6 @@ class Manager:
                 output = self.writing_bot.process(getattr(self.experience_map[int(exp_id)], search), to_match)
                 refined_output = self.refining_bot.process(output, to_match)
                 setattr(self.experience_map[int(exp_id)], search, refined_output)
-        # if search == "what":
-        #     for exp_id, matches in self.matching_dict["what"]["matching-pairs"].items():
-        #         if matches:
-        #             to_match = self.matching_dict["what"]["matching-pairs"][exp_id]
-        #             output = self.writing_bot.process(self.experience_map[int(exp_id)].what, to_match)
-        #             refined_output = self.refining_bot.process(output, to_match)
-        #             self.experience_map[int(exp_id)].what += refined_output
-        # elif search == "how":
-        #     for exp_id, matches in self.matching_dict["how"]["matching-pairs"].items():
-        #         if matches:
-        #             to_match = self.matching_dict["how"]["matching-pairs"][exp_id]
-        #             output = self.writing_bot.process(self.experience_map[int(exp_id)].how, to_match)
-        #             refined_output = self.refining_bot.process(output, to_match)
-        #             self.experience_map[int(exp_id)].how += refined_output
-        # elif search == "result":
-        #     for exp_id, matches in self.matching_dict["result"]["matching-pairs"].items():
-        #         if matches:
-        #             to_match = self.matching_dict["result"]["matching-pairs"][exp_id]
-        #             output = self.writing_bot.process(self.experience_map[int(exp_id)].result, to_match)
-        #             refined_output = self.refining_bot.process(output, to_match)
-        #             self.experience_map[int(exp_id)].result += refined_output
 
     def apply_match(self):
         output = []
