@@ -156,3 +156,7 @@ def run(file1, file2):
     add_experiences_to_database(user_database, 1)
     add_job_to_database(user_database, 1)
     add_job_features(user_database, 1)
+
+
+if __name__ == "__main__":
+    run("../documents/inputs/sample_resume.pdf", "../documents/inputs/jobs.txt")
