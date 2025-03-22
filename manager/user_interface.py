@@ -65,43 +65,43 @@ def drop_all():
     undo_drop_job_description()
 
 
-# Initialize main window
-root = TkinterDnD.Tk()
-root.title("Drag and Drop Example")
+if __name__ == "__main__":
+    root = TkinterDnD.Tk()
+    root.title("Resume Builder")
 
-root.configure(bg="#ADD8E6")
+    root.configure(bg="#ADD8E6")
 
-resume_path = tk.StringVar()
-job_desc_path = tk.StringVar()
+    resume_path = tk.StringVar()
+    job_desc_path = tk.StringVar()
 
-frame = tk.Frame(root, bg="#ADD8E6")
-frame.pack(pady=10)
+    frame = tk.Frame(root, bg="#ADD8E6")
+    frame.pack(pady=10)
 
-button_frame = tk.Frame(root, bg="#ADD8E6")
-button_frame.pack(pady=10)
+    button_frame = tk.Frame(root, bg="#ADD8E6")
+    button_frame.pack(pady=10)
 
-upload_resume_btn = tk.Button(frame, text="Upload Resume", command=upload_resume, bg="#D3D3D3", relief="flat", highlightbackground="#ADD8E6")
-upload_resume_btn.grid(row=0, column=0, pady=5)
+    upload_resume_btn = tk.Button(frame, text="Upload Resume", command=upload_resume, bg="#D3D3D3", relief="flat", highlightbackground="#ADD8E6")
+    upload_resume_btn.grid(row=0, column=0, pady=5)
 
-resume_label = tk.Label(frame, text="Drag and drop\nResume file here", relief="solid", width=30, height=15, bd=1, bg="white")
-resume_label.grid(row=1, column=0, padx=10)
-resume_label.drop_target_register(DND_FILES)
-resume_label.dnd_bind('<<Drop>>', on_drop_resume)
+    resume_label = tk.Label(frame, text="Drag and drop\nResume file here", relief="solid", width=30, height=15, bd=1, bg="white")
+    resume_label.grid(row=1, column=0, padx=10)
+    resume_label.drop_target_register(DND_FILES)
+    resume_label.dnd_bind('<<Drop>>', on_drop_resume)
 
-upload_job_desc_btn = tk.Button(frame, text="Upload Job Description", command=upload_job_description, bg="#D3D3D3", relief="flat", highlightbackground="#ADD8E6")
-upload_job_desc_btn.grid(row=0, column=1, pady=5)
+    upload_job_desc_btn = tk.Button(frame, text="Upload Job Description", command=upload_job_description, bg="#D3D3D3", relief="flat", highlightbackground="#ADD8E6")
+    upload_job_desc_btn.grid(row=0, column=1, pady=5)
 
-job_desc_label = tk.Label(frame, text="Drag and drop\nJob Description file here", relief="solid", width=30, height=15, bd=1, bg="white")
-job_desc_label.grid(row=1, column=1, padx=10)
-job_desc_label.drop_target_register(DND_FILES)
-job_desc_label.dnd_bind('<<Drop>>', on_drop_job_description)
+    job_desc_label = tk.Label(frame, text="Drag and drop\nJob Description file here", relief="solid", width=30, height=15, bd=1, bg="white")
+    job_desc_label.grid(row=1, column=1, padx=10)
+    job_desc_label.drop_target_register(DND_FILES)
+    job_desc_label.dnd_bind('<<Drop>>', on_drop_job_description)
 
-generate_btn = tk.Button(button_frame, text="Generate Resume", command=run_other_script, relief="flat", highlightbackground="#ADD8E6")
-generate_btn.grid(row=0, column=0, padx=0)
+    generate_btn = tk.Button(button_frame, text="Generate Resume", command=run_other_script, relief="flat", highlightbackground="#ADD8E6")
+    generate_btn.grid(row=0, column=0, padx=0)
 
-drop_all_btn = tk.Button(button_frame, text="Drop Files", command=drop_all, relief="flat", highlightbackground="#ADD8E6")
-drop_all_btn.grid(row=0, column=1, padx=0)
+    drop_all_btn = tk.Button(button_frame, text="Drop Files", command=drop_all, relief="flat", highlightbackground="#ADD8E6")
+    drop_all_btn.grid(row=0, column=1, padx=0)
 
-button_frame.configure(bg="#ADD8E6")
+    button_frame.configure(bg="#ADD8E6")
 
-root.mainloop()
+    root.mainloop()
