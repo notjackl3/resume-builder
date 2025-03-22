@@ -27,8 +27,6 @@ def replace_all(obj):
     return obj
 
 
-# shutil.copy("/Users/notjackl3/PycharmProjects/ResumeBuilder/exporter/template.tex",
-#             "/Users/notjackl3/PycharmProjects/ResumeBuilder/exporter/resume.tex")
 final_template = "final_template.tex"
 generated_template = "generated_resume.tex"
 

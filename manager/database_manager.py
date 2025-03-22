@@ -49,18 +49,6 @@ class UserDatabaseManager:
                     for item in insert_item:
                         cur.execute(insert_command, item)
 
-                    # update_command = "UPDATE profile SET name = %s WHERE name = %s"
-                    # update_item = ("Daphne", "Jack")
-                    # cur.execute(update_command, update_item)
-                    #
-                    # delete_command = "DELETE FROM profile WHERE name = %s"
-                    # delete_item = ("Jack 3",)
-                    # cur.execute(delete_command, delete_item)
-                    #
-                    # cur.execute("SELECT * FROM profile")
-                    # for record in cur.fetchall():
-                    #     print(record["name"], record["email"])
-
                     connection.commit()
 
         except Exception as error:
@@ -116,7 +104,7 @@ class UserDatabaseManager:
                                         end_date TEXT,
                                         city VARCHAR(100),
                                         country VARCHAR(100),
-                                        gpa REAL,
+                                        gpa VARCHAR(100),
                                         user_id INT,
                                         CONSTRAINT fk_user
                                             FOREIGN KEY(user_id)

@@ -4,13 +4,11 @@ import json
 from openai import OpenAI
 import textract
 import re
-
+from dotenv import load_dotenv
+import os
 from extractor import ResumeExtractor, JobDescriptionExtractor
 from processor import MatchingProcessor, WritingProcessor, RefiningProcessor, CombiningProcessor, ApplyMatching
 from experiences_manager import Experience
-
-from dotenv import load_dotenv
-import os
 
 load_dotenv("api.env")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

@@ -1,5 +1,6 @@
 import itertools
 
+
 class Experience:
     id_iter = itertools.count()
 
