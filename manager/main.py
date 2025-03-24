@@ -1,29 +1,61 @@
+import os
+import sys
+from bot_manager import Manager
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from exporter.converter import update_resume, export_to_pdf
+from database_manager import UserDatabaseManager
+from dotenv import load_dotenv
+from utils import make_date, add_experience, add_coding_languages, add_technical_skills, add_soft_skills
+from authentication_manager import authenticate_user, register_user, get_id
+
+load_dotenv("api.env")
+
+HOSTNAME = os.getenv("HOSTNAME")
+DATABASE = os.getenv("DATABASE")
+USERNAME = os.getenv("USERNAME")
+PWD = os.getenv("PWD")
+PORT_ID = os.getenv("PORT_ID")
+USER_ID = 0
+
+
+def login():
+    username_input = input("Username: ")
+    password_input = input("Password: ")
+    if authenticate_user(username_input, password_input):
+        global USER_ID
+        USER_ID = get_id(username_input)[0]
+        return True
+    else:
+        return False
+
+
+def register():
+    username_input = input("New Username: ")
+    password_input = input("New Password: ")
+    if register_user(username_input, password_input):
+        return True
+    else:
+        return False
+
+
 def run(file1, file2):
-    import os
-    import sys
-    import tkinter as tk
-    from tkinterdnd2 import DND_FILES, TkinterDnD
-
-    from bot_manager import Manager
-
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-    from exporter.converter import update_resume
-    from exporter.converter import export_to_pdf
-    from database_manager import UserDatabaseManager
-    from dotenv import load_dotenv
-    from utils import make_date
-    from utils import add_experience, add_coding_languages, add_technical_skills, add_soft_skills
-
-    load_dotenv("api.env")
-
-    HOSTNAME = os.getenv("HOSTNAME")
-    DATABASE = os.getenv("DATABASE")
-    USERNAME = os.getenv("USERNAME")
-    PWD = os.getenv("PWD")
-    PORT_ID = os.getenv("PORT_ID")
-
-    # manager = Manager(resume="../documents/inputs/Diep Anh Nguyen Official Resume.pdf",
-    #                   job_desc="../documents/inputs/jobs.txt")
+    logged_in = False
+    while not logged_in:
+        response = input("Would you like to login or signup? ")
+        if response.lower() == "login":
+            if login():
+                print("Logged in.")
+                logged_in = True
+            else:
+                print("Password is incorrect.")
+        elif response.lower() == "signup":
+            if register():
+                print("User created.")
+            else:
+                print("Username already existed.")
+        else:
+            print("Invalid input. Please choose either 'login' or 'signup'.")
 
     manager = Manager(resume=file1, job_desc=file2)
     manager.extract_information_resume("../documents/outputs/output.txt", True)
@@ -62,13 +94,9 @@ def run(file1, file2):
     }
 
     add_experience(data, manager.experience_map)
-
     add_coding_languages(data, manager.job_desc_dict["coding-languages"], manager.skill_data)
-
     add_technical_skills(data["technologies"], manager.resume_dict, data["proficient"], data["intermediate"])
-
     add_soft_skills(data["soft_skills"], manager.job_desc_dict["soft-skills"], manager.resume_dict["soft-skills"])
-
     update_resume("../exporter", data)
     export_to_pdf("generated_resume.tex", "../exporter")
 
@@ -81,12 +109,14 @@ def run(file1, file2):
         database.delete_table("job_features")
         database.delete_table("jobs")
         database.delete_table("profile")
-        user_database.create_new_database(manager.resume_dict["name"],
-                                          manager.resume_dict["contact"]["email"],
-                                          manager.resume_dict["contact"]["phone"],
-                                          manager.resume_dict["contact"]["linkedin"],
-                                          manager.resume_dict["contact"]["github"],
-                                          new=False)
+
+        user_database.create_new_database()
+        user_database.add_profile(USER_ID,
+                                  manager.resume_dict["name"],
+                                  manager.resume_dict["contact"]["email"],
+                                  manager.resume_dict["contact"]["phone"],
+                                  manager.resume_dict["contact"]["linkedin"],
+                                  manager.resume_dict["contact"]["github"])
 
     def add_education_to_database(database: UserDatabaseManager, id: int):
         for edu in manager.resume_dict["education"]:
@@ -110,7 +140,7 @@ def run(file1, file2):
         database.add_skills(id, all_technical_skills)
 
         all_interests = [("interest", x) for x in manager.resume_dict["interests"]]
-        database.add_skills(1, all_interests)
+        database.add_skills(id, all_interests)
 
     def add_experiences_to_database(database: UserDatabaseManager, id: int):
         all_experiences = manager.resume_dict["volunteer-experiences"] + manager.resume_dict["work-experiences"]
@@ -135,26 +165,16 @@ def run(file1, file2):
         database.add_job(id, title, company_name, job_description)
 
     def add_job_features(database: UserDatabaseManager, id: int):
-        for x in manager.job_desc_dict["responsibilities"]:
-            database.add_job_features(x, "responsibility", id)
-        for x in manager.job_desc_dict["soft-skills"]:
-            database.add_job_features(x, "soft-skill", id)
-        for x in manager.job_desc_dict["hard-skills"]:
-            database.add_job_features(x, "hard-skill", id)
-        for x in manager.job_desc_dict["preferred-experiences"]:
-            database.add_job_features(x, "preferred-experience", id)
-        for x in manager.job_desc_dict["technologies"]:
-            database.add_job_features(x, "technology", id)
-        for x in manager.job_desc_dict["action-verbs"]:
-            database.add_job_features(x, "action-verb", id)
-        for x in manager.job_desc_dict["coding-languages"]:
-            database.add_job_features(x, "coding-language", id)
+        keywords = ["responsibilities", "soft-skills", "hard-skills", "preferred-experiences", "technologies", "action-verbs", "coding-languages"]
+        for keyword in keywords:
+            for x in manager.job_desc_dict[keyword]:
+                database.add_job_features(x, keyword, id)
 
     reset_database(user_database)
-    add_education_to_database(user_database, 1)
-    add_skills_to_database(user_database, 1)
-    add_experiences_to_database(user_database, 1)
-    add_job_to_database(user_database, 1)
+    add_education_to_database(user_database, USER_ID)
+    add_skills_to_database(user_database, USER_ID)
+    add_experiences_to_database(user_database, USER_ID)
+    add_job_to_database(user_database, USER_ID)
     add_job_features(user_database, 1)
 
 

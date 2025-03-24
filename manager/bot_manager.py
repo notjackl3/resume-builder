@@ -15,6 +15,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 
+# Handle the document outputs
 def process_information(bot: Union[ResumeExtractor, JobDescriptionExtractor], to_file: str, input: str):
     output_dir = "../documents/outputs"
     os.makedirs(output_dir, exist_ok=True)
@@ -37,7 +38,6 @@ class Manager:
         self.resume_dict = {}
         self.job_desc_dict = {}
         self.matching_dict = {}
-
         self.resume_bot = ResumeExtractor()
         self.job_desc_bot = JobDescriptionExtractor()
         self.matching_bot = MatchingProcessor()
@@ -45,21 +45,19 @@ class Manager:
         self.refining_bot = RefiningProcessor()
         self.combining_bot = CombiningProcessor()
         self.apply_matching_bot = ApplyMatching()
-
         self.experience_data = []
         self.skill_data = []
         self.matching_data = None
         self.experience_map = {}
         self.mixed_map = {}
 
-    def extract_information_resume(self, path: str, update: bool=True):
+    def extract_information_resume(self, path: str, update: bool = True):
         if update:
             extracted_resume_text = textract.process(self.resume_file, method='pdfminer').decode('utf-8')
             process_information(self.resume_bot, path, extracted_resume_text)
-        # self.resume_dict = ast.literal_eval(use_file(path))
         self.resume_dict = json.loads(use_file(path))
 
-    def extract_information_job(self, path: str, update: bool=True):
+    def extract_information_job(self, path: str, update: bool = True):
         if update:
             extracted_job_desc_text = textract.process(self.job_desc_file, method='pdfminer').decode('utf-8')
             process_information(self.job_desc_bot, path,
