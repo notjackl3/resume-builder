@@ -59,10 +59,10 @@ def authenticate_user(username_input, password_input):
     try:
         with psycopg2.connect(host=HOSTNAME, dbname=DATABASE, user=USERNAME, password=PWD, port=PORT_ID) as connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
-                cur.execute("SELECT hashed_password FROM users WHERE username = %s", (username_input,))
+                cur.execute("SELECT id, hashed_password FROM users WHERE username = %s", (username_input,))
                 result = cur.fetchone()
-        if result and verify_password(password_input, result[0]):
-            return True
+        if result and verify_password(password_input, result["hashed_password"]):
+            return result["id"]
         return False
     except Exception as error:
         print(error)
