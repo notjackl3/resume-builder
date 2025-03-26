@@ -3,7 +3,9 @@ from __future__ import annotations
 import os
 import os.path
 import sys
-from bot_manager import Manager
+import time
+
+from bot_manager import Manager, delete_duplicates
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from exporter.converter import update_resume, export_to_pdf
@@ -11,6 +13,7 @@ from database_manager import UserDatabaseManager
 from dotenv import load_dotenv
 from utils import make_date, add_experience, add_coding_languages, add_technical_skills, add_soft_skills
 from authentication_manager import authenticate_user, register_user, get_id
+from user_interface import on_call, notify
 
 load_dotenv("api.env")
 
@@ -156,23 +159,31 @@ if __name__ == "__main__":
                                       github)
         else:
             profile_id = int(response)
+            # Current profile stores all of the basic information of the current user
             current_profile = user_database.get_profile(profile_id, "profile_id")[0]
             selected_profile = True
+
+    print(user_database.get_items(profile_id, "experiences", "what"))
 
     selected_job = False
     while not selected_job:
         title = input("Job title: ")
         company_name = input("Company name: ")
 
-        input_file = input("What resume file do you want to improve (file path)? ")
-        if os.path.isfile(input_file):
-            selected_job = True
-        else:
-            print("Invalid file path.")
-        job_file = input("What is your job description (file path)? ")
-        if not os.path.isfile(job_file):
-            print("Invalid file path.")
-            selected_job = False
+        input_files = on_call()
+        notify()
+        input_file = input_files[0]
+        job_file = input_files[1]
+        selected_job = True
+        # input_file = input("What resume file do you want to improve (file path)? ")
+        # if os.path.isfile(input_file):
+        #     selected_job = True
+        # else:
+        #     print("Invalid file path.")
+        # job_file = input("What is your job description (file path)? ")
+        # if not os.path.isfile(job_file):
+        #     print("Invalid file path.")
+        #     selected_job = False
     with open(job_file, "r") as f:
         job_description = f.read()
 
@@ -188,6 +199,8 @@ if __name__ == "__main__":
     manager.allocate_matching("what")
     manager.allocate_matching("how")
     manager.allocate_matching("result")
+
+    delete_duplicates("/Users/notjackl3/Documents/resume-builder/documents/outputs/output-match.json")
 
     data = {
         "name": current_profile[1],

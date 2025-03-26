@@ -9,6 +9,7 @@ import os
 from extractor import ResumeExtractor, JobDescriptionExtractor
 from processor import MatchingProcessor, WritingProcessor, RefiningProcessor, CombiningProcessor, ApplyMatching
 from experiences_manager import Experience
+from database_manager import UserDatabaseManager
 
 load_dotenv("api.env")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -28,6 +29,20 @@ def process_information(bot: Union[ResumeExtractor, JobDescriptionExtractor], to
 def use_file(file: str):
     with open(file) as file:
         return file.read()
+
+
+def delete_duplicates(matching_file):
+    data = ast.literal_eval(use_file(matching_file))
+    for prop in data:
+        exist = []
+        for key, values in data[prop]["matching-pairs"].items():
+            for word in values:
+                if word not in exist:
+                    exist.append(word)
+                else:
+                    values.remove(word)
+    with open(matching_file, "w") as file:
+        json.dump(data, file)
 
 
 class Manager:

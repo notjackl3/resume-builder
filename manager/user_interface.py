@@ -1,9 +1,10 @@
 import os
+import time
 import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
-import subprocess
-from tkinter import filedialog
-from manager.main import run
+from tkinter import filedialog, messagebox, Tk, Button
+
+resume_path, job_desc_path, upload_resume_btn, resume_label, upload_job_desc_btn, job_desc_label = None, None, None, None, None, None
 
 
 def on_drop_resume(event):
@@ -18,29 +19,34 @@ def on_drop_job_description(event):
     upload_job_desc_btn.config(state="disabled")  # Disable upload button after drop
 
 
-def run_other_script():
-    resume_file = resume_path.get()
-    job_desc_file = job_desc_path.get()
-    resume_file = resume_file.strip("{}")
-    job_desc_file = job_desc_file.strip("{}")
-    if resume_file and job_desc_file:
-        print(resume_file)
-        print(job_desc_file)
-        run(resume_file, job_desc_file)
-    else:
-        print("Both files need to be dropped before generating!")
+def generate_resume():
+    try:
+        if resume_path.get() and job_desc_path.get():
+            root.withdraw()
+            root.quit()
+            root.destroy()
+        else:
+            print("Both files need to be dropped before generating.")
+    except Exception as e:
+        print(e)
 
 
 def undo_drop_resume():
-    resume_path.set("")
-    resume_label.config(bg="white", text="Drag and drop\nResume file here", state="normal")
-    upload_resume_btn.config(state="normal")
+    try:
+        resume_path.set("")
+        resume_label.config(bg="white", text="Drag and drop\nResume file here", state="normal")
+        upload_resume_btn.config(state="normal")
+    except Exception as e:
+        print(e)
 
 
 def undo_drop_job_description():
-    job_desc_path.set("")
-    job_desc_label.config(bg="white", text="Drag and drop\nJob Description file here", state="normal")
-    upload_job_desc_btn.config(state="normal")
+    try:
+        job_desc_path.set("")
+        job_desc_label.config(bg="white", text="Drag and drop\nJob Description file here", state="normal")
+        upload_job_desc_btn.config(state="normal")
+    except Exception as e:
+        print(e)
 
 
 def upload_resume():
@@ -65,14 +71,17 @@ def drop_all():
     undo_drop_job_description()
 
 
-if __name__ == "__main__":
-    root = TkinterDnD.Tk()
-    root.title("Resume Builder")
+def on_call():
+    global root, resume_path, job_desc_path, upload_resume_btn, resume_label, upload_job_desc_btn, job_desc_label
 
+    root = TkinterDnD.Tk()  # Create the root window
+
+    root.title("Resume Builder")
     root.configure(bg="#ADD8E6")
 
-    resume_path = tk.StringVar()
-    job_desc_path = tk.StringVar()
+    # Initialize StringVars after creating the root window
+    resume_path = tk.StringVar(root)
+    job_desc_path = tk.StringVar(root)
 
     frame = tk.Frame(root, bg="#ADD8E6")
     frame.pack(pady=10)
@@ -96,7 +105,7 @@ if __name__ == "__main__":
     job_desc_label.drop_target_register(DND_FILES)
     job_desc_label.dnd_bind('<<Drop>>', on_drop_job_description)
 
-    generate_btn = tk.Button(button_frame, text="Generate Resume", command=run_other_script, relief="flat", highlightbackground="#ADD8E6")
+    generate_btn = tk.Button(button_frame, text="Generate Resume", command=generate_resume, relief="flat", highlightbackground="#ADD8E6")
     generate_btn.grid(row=0, column=0, padx=0)
 
     drop_all_btn = tk.Button(button_frame, text="Drop Files", command=drop_all, relief="flat", highlightbackground="#ADD8E6")
@@ -104,4 +113,38 @@ if __name__ == "__main__":
 
     button_frame.configure(bg="#ADD8E6")
 
+    # Close the root window when the user clicks the close button
+    root.protocol("WM_DELETE_WINDOW", lambda: root.quit())  # Handle window close event properly
+
+    root.mainloop()  # Start the event loop for the main window
+
+    resume_file = resume_path.get()
+    job_desc_file = job_desc_path.get()
+    resume_file = resume_file.strip("{}")
+    job_desc_file = job_desc_file.strip("{}")
+
+    return resume_file, job_desc_file
+
+
+def notify():
+    root = tk.Tk()
+    root.title("Notification")
+    root.resizable(False, False)
+    window_width = 300
+    window_height = 100
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    position_x = (screen_width - window_width) // 2
+    position_y = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+    msg_label = tk.Label(root, text="Resume Generated!", font=("Arial", 20))
+    msg_label.pack(expand=True, pady=20)
     root.mainloop()
+
+
+# Main entry point for the program
+if __name__ == "__main__":
+    # Call the on_call function from the main script
+    resume_file, job_desc_file = on_call()
+    print(f"Resume File: {resume_file}")
+    print(f"Job Description File: {job_desc_file}")

@@ -219,3 +219,15 @@ class UserDatabaseManager:
                     connection.commit()
         except Exception as error:
             print(error)
+
+    def get_items(self, profile_id, table, column):
+        try:
+            with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                    get_command = f"SELECT {column} FROM {table} WHERE profile_id = %s"
+                    cur.execute(get_command, (profile_id, ))
+                    results = cur.fetchall()
+                    connection.commit()
+                    return results
+        except Exception as error:
+            print(error)
