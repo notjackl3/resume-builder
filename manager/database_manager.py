@@ -40,66 +40,68 @@ class UserDatabaseManager:
                     # Create education table
                     cur.execute("""CREATE TABLE IF NOT EXISTS education (
                                         id SERIAL PRIMARY KEY,
+                                        profile_id INT,
+                                        CONSTRAINT fk_user
+                                            FOREIGN KEY(profile_id)
+                                                REFERENCES profile(profile_id) ON DELETE CASCADE,
                                         school VARCHAR(100) NOT NULL,
                                         program VARCHAR(100),
                                         start_date TEXT,
                                         end_date TEXT,
                                         city VARCHAR(100),
                                         country VARCHAR(100),
-                                        gpa VARCHAR(100),
-                                        profile_id INT,
-                                        CONSTRAINT fk_user
-                                            FOREIGN KEY(profile_id)
-                                                REFERENCES profile(profile_id) ON DELETE CASCADE)""")
+                                        gpa VARCHAR(100))""")
 
                     # Create experiences table
                     cur.execute("""CREATE TABLE IF NOT EXISTS experiences (
                                         id SERIAL PRIMARY KEY,
-                                        name VARCHAR NOT NULL,
-                                        experience_type VARCHAR(100) CHECK (experience_type IN ('work', 'volunteer')),
-                                        what VARCHAR,
-                                        location VARCHAR,
-                                        how VARCHAR,
-                                        start_date TEXT,
-                                        end_date TEXT,
-                                        result VARCHAR,
                                         profile_id INT,
                                         CONSTRAINT fk_user
                                             FOREIGN KEY(profile_id)
-                                                REFERENCES profile(profile_id) ON DELETE CASCADE)""")
+                                                REFERENCES profile(profile_id) ON DELETE CASCADE,                        
+                                        name VARCHAR NOT NULL,
+                                        experience_type VARCHAR(100) CHECK (experience_type IN ('work', 'volunteer')),
+                                        location VARCHAR,
+                                        what VARCHAR,
+                                        how VARCHAR,
+                                        result VARCHAR,
+                                        start_date TEXT,
+                                        end_date TEXT,
+                                        what_improved VARCHAR,
+                                        how_improved VARCHAR,
+                                        result_improved VARCHAR)""")
 
                     # Create skills table
                     cur.execute("""CREATE TABLE IF NOT EXISTS skills (
                                         id SERIAL PRIMARY KEY,
-                                        skill_type VARCHAR(100) CHECK (skill_type IN ('soft', 'technical', 'interest')),
-                                        name VARCHAR(100),
                                         profile_id INT,
                                         CONSTRAINT fk_user
                                             FOREIGN KEY(profile_id)
-                                                REFERENCES profile(profile_id) ON DELETE CASCADE)""")
+                                                REFERENCES profile(profile_id) ON DELETE CASCADE,
+                                        skill_type VARCHAR(100) CHECK (skill_type IN ('soft', 'technical', 'interest')),
+                                        name VARCHAR(100))""")
 
                     # Create jobs table
                     cur.execute("""CREATE TABLE IF NOT EXISTS jobs (
                                         id SERIAL PRIMARY KEY,
-                                        title VARCHAR(100),
-                                        company VARCHAR(100),
-                                        description TEXT,
                                         profile_id INT,
                                         CONSTRAINT fk_user
                                             FOREIGN KEY(profile_id)
-                                                REFERENCES profile(profile_id) ON DELETE CASCADE)""")
+                                                REFERENCES profile(profile_id) ON DELETE CASCADE,
+                                        title VARCHAR(100),
+                                        company VARCHAR(100),
+                                        description TEXT)""")
 
                     # Create job_features table
                     cur.execute("""CREATE TABLE IF NOT EXISTS job_features (
                                         id SERIAL PRIMARY KEY,
-                                        word VARCHAR NOT NULL,
-                                        feature_type VARCHAR(100) CHECK (feature_type IN ('responsibilities', 'soft-skills', 'hard-skills', 'preferred-experiences', 
-                                        'technologies', 'action-verbs', 'coding-languages')),
                                         job_id INT,
                                         CONSTRAINT fk_job
                                             FOREIGN KEY(job_id)
-                                                REFERENCES jobs(id) ON DELETE CASCADE)""")
-
+                                                REFERENCES jobs(id) ON DELETE CASCADE,
+                                        word VARCHAR NOT NULL,
+                                        feature_type VARCHAR(100) CHECK (feature_type IN ('responsibilities', 'soft-skills', 'hard-skills', 'preferred-experiences', 
+                                        'technologies', 'action-verbs', 'coding-languages')))""")
                     connection.commit()
         except Exception as error:
             print(error)
@@ -154,9 +156,9 @@ class UserDatabaseManager:
             with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     insert_command = ("INSERT INTO education "
-                                      "(school, program, start_date, end_date, city, country, gpa, profile_id)"
+                                      "(profile_id, school, program, start_date, end_date, city, country, gpa)"
                                       "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
-                    insert_item = [(school, program, start_date, end_date, city, country, gpa, profile_id)]
+                    insert_item = [(profile_id, school, program, start_date, end_date, city, country, gpa)]
                     for item in insert_item:
                         cur.execute(insert_command, item)
                     connection.commit()
@@ -168,24 +170,24 @@ class UserDatabaseManager:
             with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     insert_command = ("INSERT INTO skills "
-                                      "(skill_type, name, profile_id)"
+                                      "(profile_id, skill_type, name)"
                                       "VALUES (%s, %s, %s)")
-                    insert_item = [(skill[0], skill[1], profile_id) for skill in skills]
+                    insert_item = [(profile_id, skill[0], skill[1]) for skill in skills]
                     for item in insert_item:
                         cur.execute(insert_command, item)
                     connection.commit()
         except Exception as error:
             print(error)
 
-    def add_experience(self, profile_id, name, experience_type, what="NULL", where="NULL", how="NULL",
-                       start_date="NULL", end_date="NULL", result="NULL"):
+    def add_experience(self, profile_id, name, experience_type, where="NULL", what="NULL", how="NULL",
+                       result="NULL", start_date="NULL", end_date="NULL"):
         try:
-            with psycopg2.connect(host=self._host,dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
+            with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     insert_command = ("INSERT INTO experiences "
-                                      "(name, experience_type, what, location, how, start_date, end_date, result, profile_id)"
+                                      "(profile_id, name, experience_type, location, what, how, result, start_date, end_date)"
                                       "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    insert_item = [(name, experience_type, what, where, how, start_date, end_date, result, profile_id)]
+                    insert_item = [(profile_id, name, experience_type, where, what, how, result, start_date, end_date)]
                     for item in insert_item:
                         cur.execute(insert_command, item)
                     connection.commit()
@@ -197,23 +199,23 @@ class UserDatabaseManager:
             with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     insert_command = ("INSERT INTO jobs "
-                                      "(title, company, description, profile_id)"
+                                      "(profile_id, title, company, description)"
                                       "VALUES (%s, %s, %s, %s) RETURNING id")
-                    cur.execute(insert_command, (title, company, description, profile_id))
+                    cur.execute(insert_command, (profile_id, title, company, description))
                     new_job_id = cur.fetchone()[0]
                     connection.commit()
                     return new_job_id
         except Exception as error:
             print(error)
 
-    def add_job_features(self, word, feature_type, job_id):
+    def add_job_features(self, job_id, word, feature_type):
         try:
             with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     insert_command = ("INSERT INTO job_features "
-                                      "(word, feature_type, job_id)"
+                                      "(job_id, word, feature_type)"
                                       "VALUES (%s, %s, %s)")
-                    insert_item = [(word, feature_type, job_id)]
+                    insert_item = [(job_id, word, feature_type)]
                     for item in insert_item:
                         cur.execute(insert_command, item)
                     connection.commit()
@@ -225,9 +227,21 @@ class UserDatabaseManager:
             with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
                     get_command = f"SELECT {column} FROM {table} WHERE profile_id = %s"
-                    cur.execute(get_command, (profile_id, ))
+                    cur.execute(get_command, (profile_id,))
                     results = cur.fetchall()
                     connection.commit()
                     return results
+        except Exception as error:
+            print(error)
+
+    def update_item(self, profile_id, table, search, column_search, update, column_update):
+        try:
+            with psycopg2.connect(host=self._host, dbname=self._dbname, user=self._user, password=self._password, port=self._port) as connection:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+                    update_command = (f"UPDATE {table} "
+                                      f"SET {column_update} = %s "
+                                      f"WHERE profile_id = %s AND {column_search}= %s")
+                    cur.execute(update_command, (update, profile_id, search))
+                    connection.commit()
         except Exception as error:
             print(error)

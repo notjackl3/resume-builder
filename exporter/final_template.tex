@@ -134,11 +134,11 @@
 
 
 %-----------EXPERIENCE-----------
-<<% if jobs %>>
+<<% if work %>>
 \section{Work Experience}
   \resumeSubHeadingListStart
 
-    <<% for job in jobs %>>\resumeSubheading
+    <<% for job in work %>>\resumeSubheading
       {<< job.title >>}{<< job.start_date >> - << job.end_date >>}
       {<< job.where >>}{}
       \resumeItemListStart

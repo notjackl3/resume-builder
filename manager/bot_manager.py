@@ -127,6 +127,7 @@ class Manager:
                                                                + self.job_desc_dict["preferred-experiences"])}
         with open(self.matching_file, "w") as file:
             json.dump(self.matching_data, file)
+        delete_duplicates("/Users/notjackl3/Documents/resume-builder/documents/outputs/output-match.json")
         with open(self.matching_file, "r") as file:
             self.matching_dict = json.load(file)
 
