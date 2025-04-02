@@ -77,7 +77,6 @@ def make_date(input, start_end):
 def add_experience(data: dict, information: dict):
     for exp_id, exp in information.items():
         if exp.type == "work":
-            print(exp.name)
             data["work"].append({"title": exp.name.strip(),
                                  "start_date": exp.when.split("-")[0].strip(),
                                  "end_date": exp.when.split("-")[1].strip(),

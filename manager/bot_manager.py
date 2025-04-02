@@ -1,5 +1,5 @@
 import ast
-from typing import Union
+from typing import Union, Optional
 import json
 from openai import OpenAI
 import textract
@@ -46,7 +46,7 @@ def delete_duplicates(matching_file):
 
 
 class Manager:
-    def __init__(self, resume: str, job_desc: str):
+    def __init__(self, resume: Optional[str], job_desc: Optional[str]):
         self.resume_file = resume
         self.job_desc_file = job_desc
         self.matching_file = "../documents/outputs/output-match.json"
