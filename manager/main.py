@@ -153,7 +153,7 @@ def edit_experience(env) -> None:
                 resp = input("--> ")
 
                 if resp == "y":
-                    print("══════════════════════════════════════════════")
+                    print("\n══════════════════════════════════════════════")
                     print("   Enter the updated version below.")
                     print("══════════════════════════════════════════════\n")
                     update = input("--> ")
@@ -241,10 +241,15 @@ def job_screen(env):
     env["input_files"] = on_call()
     notify()
     env["input_file"] = env["input_files"][0]
-    env["job_file"] = env["input_files"][1]
+    env["job_description"] = env["input_files"][1]
+    with open("../documents/inputs/jobs.txt", "w") as file:
+        file.write(env["job_description"])
+    env["job_file"] = "../documents/inputs/jobs.txt"
+    # This is for when the user input in a job file instead of a text
+    # env["job_file"] = env["input_files"][1]
+    # with open(env["job_file"], "r") as f:
+    #     env["job_description"] = f.read()
 
-    with open(env["job_file"], "r") as f:
-        env["job_description"] = f.read()
 
 
 def edit_screen(env):
@@ -265,8 +270,11 @@ def edit_screen(env):
     for current, improved in zip(current_ver, improved_ver):
         ver = 0
         for curr, impr in zip(current, improved):
-            if curr[0] != '' and curr[0] != impr[0]:
-                options.append((curr[0], impr[0], ver))
+            if curr[0] != '':
+                if curr[0] != impr[0]:
+                    options.append((curr[0], impr[0], ver, True))
+                else:
+                    options.append((curr[0], impr[0], ver, False))
             ver += 1
 
     print("\n══════════════════════════════════════════════")
@@ -274,15 +282,17 @@ def edit_screen(env):
     print("══════════════════════════════════════════════\n")
 
     for i, option in enumerate(options):
-        print(f"[{i}] Original: {option[0]}")
-        print(f"    Latest ➝ {option[1]}\n")
-
-    print("══════════════════════════════════════════════")
-    print("   Enter the index of the item you want to change or type 'n' to continue.")
-    print("══════════════════════════════════════════════\n")
+        if option[3]:
+            print(f"[{i}] Original: {option[0]}")
+            print(f"    Latest ➝ {option[1]}\n")
+        else:
+            print(f"[{i}] Original (unchanged): {option[0]}\n")
 
     response = None
     while response != "n":
+        print("\n══════════════════════════════════════════════")
+        print("   Enter the index of the item you want to change or type 'n' to continue.")
+        print("══════════════════════════════════════════════\n")
         response = input("--> ")
         if response != "n":
             print("\n══════════════════════════════════════════════")

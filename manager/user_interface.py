@@ -13,15 +13,11 @@ def on_drop_resume(event):
     upload_resume_btn.config(state="disabled")  # Disable upload button after drop
 
 
-def on_drop_job_description(event):
-    job_desc_path.set(event.data)
-    job_desc_label.config(bg="#D3D3D3", text="Job Description file dropped", state="disabled")
-    upload_job_desc_btn.config(state="disabled")  # Disable upload button after drop
-
-
 def generate_resume():
     try:
-        if resume_path.get() and job_desc_path.get():
+        if resume_path.get() and job_desc_label.get("1.0", "end-1c").strip():
+            global job_desc_file
+            job_desc_file = get_job_description_text().strip()
             root.withdraw()
             root.quit()
             root.destroy()
@@ -40,15 +36,6 @@ def undo_drop_resume():
         print(e)
 
 
-def undo_drop_job_description():
-    try:
-        job_desc_path.set("")
-        job_desc_label.config(bg="white", text="Drag and drop\nJob Description file here", state="normal")
-        upload_job_desc_btn.config(state="normal")
-    except Exception as e:
-        print(e)
-
-
 def upload_resume():
     file_path = filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf"), ("Text Files", "*.txt")])
     if file_path:
@@ -57,18 +44,20 @@ def upload_resume():
         upload_resume_btn.config(state="disabled")
 
 
+def drop_all():
+    undo_drop_resume()
+
+
 def upload_job_description():
     file_path = filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf"), ("Text Files", "*.txt")])
     if file_path:
         file_path = file_path.strip("{}")
         job_desc_path.set(file_path)
-        job_desc_label.config(bg="#D3D3D3", text="Job Description file uploaded", state="disabled")
         upload_job_desc_btn.config(state="disabled")
 
 
-def drop_all():
-    undo_drop_resume()
-    undo_drop_job_description()
+def get_job_description_text():
+    return job_desc_label.get("1.0", "end-1c").strip()
 
 
 def on_call():
@@ -100,10 +89,8 @@ def on_call():
     upload_job_desc_btn = tk.Button(frame, text="Upload Job Description", command=upload_job_description, bg="#D3D3D3", relief="flat", highlightbackground="#ADD8E6")
     upload_job_desc_btn.grid(row=0, column=1, pady=5)
 
-    job_desc_label = tk.Label(frame, text="Drag and drop\nJob Description file here", relief="solid", width=30, height=15, bd=1, bg="white")
+    job_desc_label = tk.Text(frame, wrap="word", width=30, height=15, bd=1, bg="white")
     job_desc_label.grid(row=1, column=1, padx=10)
-    job_desc_label.drop_target_register(DND_FILES)
-    job_desc_label.dnd_bind('<<Drop>>', on_drop_job_description)
 
     generate_btn = tk.Button(button_frame, text="Generate Resume", command=generate_resume, relief="flat", highlightbackground="#ADD8E6")
     generate_btn.grid(row=0, column=0, padx=0)
@@ -113,15 +100,10 @@ def on_call():
 
     button_frame.configure(bg="#ADD8E6")
 
-    # Close the root window when the user clicks the close button
-    root.protocol("WM_DELETE_WINDOW", lambda: root.quit())  # Handle window close event properly
-
     root.mainloop()  # Start the event loop for the main window
 
     resume_file = resume_path.get()
-    job_desc_file = job_desc_path.get()
     resume_file = resume_file.strip("{}")
-    job_desc_file = job_desc_file.strip("{}")
 
     return resume_file, job_desc_file
 
